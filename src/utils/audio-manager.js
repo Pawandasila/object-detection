@@ -7,11 +7,18 @@ class AudioManager {
     this.isEnabled = true;
     this.volume = 0.5;
     this.customAudioCache = null;
-    this.initAudioContext();
-    this.preloadCustomAudio();
+    this.isClient = typeof window !== 'undefined';
+    
+    // Only initialize on client side
+    if (this.isClient) {
+      this.initAudioContext();
+      this.preloadCustomAudio();
+    }
   }
 
   async initAudioContext() {
+    if (!this.isClient) return;
+    
     try {
       this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
       
@@ -26,6 +33,8 @@ class AudioManager {
 
   // Preload custom audio file
   async preloadCustomAudio() {
+    if (!this.isClient) return;
+    
     try {
       const audio = new Audio("/pols-aagyi-pols.mp3");
       audio.volume = 0; // Silent preload
@@ -59,23 +68,28 @@ class AudioManager {
 
   // Play preloaded custom audio
   async playCustomAudio() {
-    if (this.customAudioCache) {
-      try {
-        // Clone the audio element to allow multiple simultaneous plays
-        const audio = this.customAudioCache.cloneNode();
-        audio.volume = this.volume;
-        await audio.play();
-        return true;
-      } catch (error) {
-        console.warn("Failed to play cached custom audio:", error);
-        return false;
-      }
+    if (!this.isClient || !this.customAudioCache) {
+      return false;
     }
-    return false;
+    
+    try {
+      // Clone the audio element to allow multiple simultaneous plays
+      const audio = this.customAudioCache.cloneNode();
+      audio.volume = this.volume;
+      await audio.play();
+      return true;
+    } catch (error) {
+      console.warn("Failed to play cached custom audio:", error);
+      return false;
+    }
   }
 
   // Load and cache audio files
   async loadSound(name, url) {
+    if (!this.isClient || !this.audioContext) {
+      return false;
+    }
+    
     try {
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
@@ -90,7 +104,7 @@ class AudioManager {
 
   // Play cached sound
   playSound(name) {
-    if (!this.isEnabled || !this.audioContext || !this.sounds.has(name)) {
+    if (!this.isEnabled || !this.isClient || !this.audioContext || !this.sounds.has(name)) {
       return;
     }
 
@@ -113,7 +127,7 @@ class AudioManager {
 
   // Generate beep sound programmatically
   playBeep(frequency = 800, duration = 0.3, type = 'sine') {
-    if (!this.isEnabled || !this.audioContext) {
+    if (!this.isEnabled || !this.isClient || !this.audioContext) {
       return;
     }
 
@@ -155,7 +169,7 @@ class AudioManager {
 
   // Speech synthesis for object detection
   speak(text) {
-    if (!this.isEnabled || !window.speechSynthesis) {
+    if (!this.isEnabled || !this.isClient || !window.speechSynthesis) {
       return;
     }
 
@@ -193,6 +207,8 @@ const audioManager = new AudioManager();
 
 // Throttled alert functions with custom audio priority
 export const playPersonAlert = throttle(async () => {
+  if (typeof window === 'undefined') return; // Skip on server
+  
   try {
     // First try to play the preloaded custom audio
     const customAudioPlayed = await audioManager.playCustomAudio();
@@ -211,10 +227,12 @@ export const playPersonAlert = throttle(async () => {
 }, 2000);
 
 export const playVehicleAlert = throttle((vehicleType) => {
+  if (typeof window === 'undefined') return; // Skip on server
   audioManager.playAlert(vehicleType);
 }, 1500);
 
 export const speakDetection = throttle((objectClass, count) => {
+  if (typeof window === 'undefined') return; // Skip on server
   const text = count > 1 
     ? `${count} ${objectClass}s detected` 
     : `${objectClass} detected`;
@@ -223,6 +241,8 @@ export const speakDetection = throttle((objectClass, count) => {
 
 // Enhanced audio with priority to custom sound file
 export const playAudio = throttle(async () => {
+  if (typeof window === 'undefined') return; // Skip on server
+  
   try {
     // First try preloaded custom audio
     const customAudioPlayed = await audioManager.playCustomAudio();
