@@ -1,0 +1,185 @@
+/* Mobile-specific styles for Object Detection App */
+
+/* Ensure proper viewport handling */
+@media screen and (max-width: 768px) {
+  
+  /* Touch-friendly button sizing */
+  button {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  /* Prevent zoom on input focus */
+  input[type="range"] {
+    font-size: 16px;
+  }
+  
+  select {
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  /* Improve touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Optimize webcam container for mobile */
+  .webcam-container {
+    position: relative;
+    width: 100%;
+    max-height: 70vh;
+    overflow: hidden;
+  }
+  
+  /* Ensure canvas overlay matches webcam exactly */
+  .detection-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none;
+  }
+  
+  /* Mobile-friendly stats grid */
+  .mobile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  /* Compact control panel */
+  .mobile-controls {
+    padding: 0.75rem;
+    margin: 0.5rem;
+  }
+  
+  /* Hide non-essential elements on small screens */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Optimize text sizes for mobile */
+  .mobile-text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .mobile-text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  /* Improve range slider for mobile */
+  input[type="range"] {
+    height: 32px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  input[type="range"]::-webkit-slider-track {
+    background: #ddd;
+    height: 6px;
+    border-radius: 3px;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  input[type="range"]::-moz-range-track {
+    background: #ddd;
+    height: 6px;
+    border-radius: 3px;
+    border: none;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  /* Loading spinner optimization */
+  .mobile-spinner {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Error message styling */
+  .mobile-error {
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    margin: 0.5rem;
+  }
+  
+  /* Optimize detection overlay performance */
+  .detection-overlay {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+/* Landscape mobile optimization */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .webcam-container {
+    max-height: 85vh;
+  }
+  
+  .mobile-controls {
+    padding: 0.5rem;
+  }
+  
+  .mobile-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Very small screens (phones in portrait) */
+@media screen and (max-width: 480px) {
+  .mobile-controls {
+    padding: 0.5rem;
+    margin: 0.25rem;
+  }
+  
+  .mobile-text-xs {
+    font-size: 0.6875rem;
+  }
+  
+  /* Stack controls vertically on very small screens */
+  .mobile-stack {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .detection-canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* PWA support styles */
+@media all and (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

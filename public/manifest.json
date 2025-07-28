@@ -1,0 +1,36 @@
+{
+  "name": "AI Object Detection App",
+  "short_name": "ObjectDetector",
+  "description": "Real-time AI-powered object detection using your device camera",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "any",
+  "categories": ["utilities", "productivity", "photo"],
+  "icons": [
+    {
+      "src": "/OIP.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/OIP.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "features": [
+    "Real-time object detection",
+    "Multiple AI model support",
+    "Audio alerts",
+    "Mobile optimized",
+    "Works offline"
+  ],
+  "permissions": [
+    "camera",
+    "microphone"
+  ]
+}
